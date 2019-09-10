@@ -1,13 +1,13 @@
 # Deep Discriminat Canonical Correlation Analysis Network
 Implementation of current paper, work in progress.
 ## Abstract
----
+
 
 ## Requirements
----
+
 
 ## Data
----
+
 ```
 F:.
 ├─trn
@@ -23,10 +23,13 @@ F:.
 ```
 
 ## Usage
----
+
+
+## Results
 
 ## Citation
----
+```
 
+```
 ## Contact
 [rulxiaing](mailto:rulxiaing@outlook.com)
