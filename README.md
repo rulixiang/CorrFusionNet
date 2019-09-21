@@ -1,4 +1,4 @@
-# Deep Discriminat Canonical Correlation Analysis Network
+# Discriminative Deep Canonical Correlation Analysis Network
 Implementation of current paper, work in progress.
 ## Abstract
 
