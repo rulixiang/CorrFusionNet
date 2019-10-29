@@ -1,4 +1,4 @@
-# Discriminative Deep Canonical Correlation Analysis Network
+# Residual Soft Constrained Correlation Network for Scene Change Detection
 Implementation of current paper, work in progress.
 ## Abstract
 
