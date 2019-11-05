@@ -1,5 +1,6 @@
-# Residual Soft Constrained Correlation Network for Scene Change Detection
-Implementation of current paper, work in progress.
+# CorrNet: Correlation based Fusion Towards Detecting Semantic Scene Level Changes of Multi-temporal VHR Imagery
+
+Work in progress.
 ## Abstract
 
 
