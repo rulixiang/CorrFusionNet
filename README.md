@@ -1,5 +1,5 @@
-# CorrNet: Correlation based Fusion Towards Detecting Semantic Scene Level Changes of Multi-temporal VHR Imagery
-
+# CorrFusionNet: Correlation based Fusion Network
+Code for CorrFusionNet: Correlation based Fusion Network Towards Detecting Land Use Scene Changes of Multi-Temporal VHR Imagery
 Work in progress.
 ## Abstract
 
