@@ -39,5 +39,6 @@ F:.
 
 - The confusion matrices the bi-temporal classification results by CorrFusionNet:
 <img src="./figures/confusionmat.png">
+
 ## Contact
 [rulxiaing](mailto:rulxiaing@outlook.com)
