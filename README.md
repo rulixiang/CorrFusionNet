@@ -44,4 +44,4 @@ F:.
 <img src="./figures/confusionmat.png">
 
 ## Contact
-[rulxiaing](mailto:rulxiaing@outlook.com)
+For any questions, you're welcomed to contact [Lixiang Ru.](mailto:rulxiaing@outlook.com)
