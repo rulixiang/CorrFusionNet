@@ -20,13 +20,13 @@ def Original_Softmax_loss(embeddings=None, weights=None, labels=None):
         loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
     return pred_prob, loss
 
-
+## implementation of DCCA with custom gradients
 @tf.custom_gradient
 def DCCA_loss(inputs):
     '''
     view_t1: nSamples x 2n Bands
     view_t2: nSamples x 2n Bands
-    borrowed from https://bitbucket.org/qingming_tang/deep-canonical-correlation-analysis/
+    from https://bitbucket.org/qingming_tang/deep-canonical-correlation-analysis/
     '''
     #outdim = 16
     rcov1 = 1e-4

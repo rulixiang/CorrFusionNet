@@ -6,7 +6,6 @@ Created on Wed Jun 26 10:44:37 2019
 """
 import numpy as np
 import tensorflow as tf
-from layers.FusionLayer import FusionLayer
 from layers.SoftDCCALayer import SoftDCCALayer
 from layers.CorrFusion import CorrFusion
 from losses import *
@@ -46,20 +45,22 @@ class model():
         label_t2_onehot = tf.one_hot(indices=self.labels_t2,
                                      depth=num_classes,
                                      name='label_t2_onehot')
-        label_bi = tf.equal(x=self.labels_t1,y=self.labels_t2,name='label_bi')
-        
+        label_bi = tf.equal(
+            x=self.labels_t1, y=self.labels_t2, name='label_bi')
 
         with tf.variable_scope('conv_layers') as scope:
-            
-            conv_t1 = self.base_net_t1(weights=None,include_top=False,input_tensor=self.inputs_t1).output
-            conv_t2 = self.base_net_t2(weights=None,include_top=False,input_tensor=self.inputs_t2).output
+
+            conv_t1 = self.base_net_t1(
+                weights=None, include_top=False, input_tensor=self.inputs_t1).output
+            conv_t2 = self.base_net_t2(
+                weights=None, include_top=False, input_tensor=self.inputs_t2).output
 
         flat_feature_t1 = tf.layers.flatten(inputs=conv_t1,
                                             name='flat_feature_t1')
         flat_feature_t2 = tf.layers.flatten(inputs=conv_t2,
                                             name='flat_feature_t2')
 
-        ## dense layer1
+        # dense layer1
         dense1_t1 = tf.layers.dense(inputs=flat_feature_t1,
                                     units=self.hidden_num,
                                     activation=self.activation,
@@ -72,8 +73,8 @@ class model():
                                     kernel_regularizer=self.l2_reg,
                                     kernel_initializer=self.init,
                                     name='dense1_t2')
-        
-        ## dense layer2
+
+        # dense layer2
         dense2_t1 = tf.layers.dense(inputs=dense1_t1,
                                     units=self.hidden_num,
                                     activation=self.activation,
@@ -86,32 +87,17 @@ class model():
                                     kernel_regularizer=self.l2_reg,
                                     kernel_initializer=self.init,
                                     name='dense2_t2')
-        
-        ## dense layer3
-        '''
-        dense3_t1 = tf.layers.dense(inputs=dense2_t1,
-                                    units=self.hidden_num,
-                                    activation=self.activation,
-                                    kernel_regularizer=self.l2_reg,
-                                    kernel_initializer=self.init,
-                                    name='dense3_t1')
-
-        dense3_t2 = tf.layers.dense(inputs=dense2_t2,
-                                    units=self.hidden_num,
-                                    activation=self.activation,
-                                    kernel_regularizer=self.l2_reg,
-                                    kernel_initializer=self.init,
-                                    name='dense3_t2')
-        '''
 
         inputs_dim = dense2_t1.get_shape().as_list()[-1]
         with tf.name_scope('Residual_Fusion_Layer'):
-            outputs_t1, outputs_t2, corr_loss, self.decov_loss, self.corr = CorrFusion(input_shape=inputs_dim).forward(inputs_t1=dense2_t1, inputs_t2=dense2_t2)
-
-        self.corr_loss = tf.reduce_mean(tf.multiply(corr_loss, tf.cast(label_bi,tf.float32)), name='corr_loss')
-
+            outputs_t1, outputs_t2, corr_loss, self.decov_loss, self.corr = CorrFusion(
+                input_shape=inputs_dim).forward(inputs_t1=dense2_t1, inputs_t2=dense2_t2)
+        # correlation loss for unchange scene pairs
+        self.corr_loss = tf.reduce_mean(tf.multiply(
+            corr_loss, tf.cast(label_bi, tf.float32)), name='corr_loss')
 
         with tf.name_scope('losses') as scope:
+            # weights for softmax layers
             weights_t1 = tf.get_variable(
                 name='weights_t1',
                 shape=[outputs_t1.get_shape().as_list()[-1], num_classes],
@@ -127,12 +113,13 @@ class model():
             self.pred_prob_t2, self.softmax_loss_t2 = Original_Softmax_loss(
                 embeddings=outputs_t2, weights=weights_t2, labels=label_t2_onehot)
 
-        ## original cnn
-        #self.losses = self.softmax_loss_t1 + self.softmax_loss_t2
-        ## cnn with DeepCCA
-        #self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + 1e-3*self.dcca_loss# + tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
-        ## cnn with softDCCA
-        self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + self.corr_loss + self.decov_loss + tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
+        # cnn with DeepCCA
+        # self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + 1e-3*self.dcca_loss# + tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
+        # cnn with softDCCA
+        self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + self.corr_loss + \
+            self.decov_loss + \
+            tf.reduce_sum(tf.get_collection(
+                tf.GraphKeys.REGULARIZATION_LOSSES))
 
         self.prediction_t1 = tf.argmax(input=self.pred_prob_t1,
                                        axis=1,
@@ -141,6 +128,7 @@ class model():
                                        axis=1,
                                        name='prediction_t2')
 
+        # accuracy metric
         with tf.name_scope('metrics') as scope:
             self.metrics_t1, self.metrics_t1_op = tf.metrics.accuracy(
                 self.labels_t1,
@@ -150,21 +138,22 @@ class model():
                 self.labels_t2,
                 predictions=self.prediction_t2,
                 name='metrics_t2')
+
         #running_vars = tf.get_collection(tf.GraphKeys.LOCAL_VARIABLES, scope="metrics")
         self.local_init = tf.local_variables_initializer()
 
-        tf.summary.histogram(name='grads/t1',values=tf.gradients(self.softmax_loss_t1, outputs_t1))
-        tf.summary.histogram(name='grads/t2',values=tf.gradients(self.softmax_loss_t2, outputs_t2))
-        tf.summary.histogram(name='losses/corr_loss',values=corr_loss)
-        tf.summary.histogram(name='losses/label_bi',values=tf.cast(label_bi,tf.float32))
+        #tf.summary.histogram(name='grads/t1',values=tf.gradients(self.softmax_loss_t1, outputs_t1))
+        #tf.summary.histogram(name='grads/t2',values=tf.gradients(self.softmax_loss_t2, outputs_t2))
+        # tf.summary.histogram(name='losses/corr_loss',values=corr_loss)
+        # tf.summary.histogram(name='losses/label_bi',values=tf.cast(label_bi,tf.float32))
 
-        tf.summary.scalar(name='losses/t1', tensor=self.softmax_loss_t1)
-        tf.summary.scalar(name='losses/t2', tensor=self.softmax_loss_t2)
-        tf.summary.scalar(name='losses/sum', tensor=self.losses)
-        tf.summary.scalar(name='losses/corr', tensor=self.corr)
-        tf.summary.scalar(name='losses/decov_loss', tensor=self.decov_loss)
-        tf.summary.scalar(name='losses/corr_loss', tensor=self.corr_loss)
-        tf.summary.scalar(name='acc/t1', tensor=self.metrics_t1)
-        tf.summary.scalar(name='acc/t2', tensor=self.metrics_t2)
+        #tf.summary.scalar(name='losses/t1', tensor=self.softmax_loss_t1)
+        #tf.summary.scalar(name='losses/t2', tensor=self.softmax_loss_t2)
+        #tf.summary.scalar(name='losses/sum', tensor=self.losses)
+        #tf.summary.scalar(name='losses/corr', tensor=self.corr)
+        #tf.summary.scalar(name='losses/decov_loss', tensor=self.decov_loss)
+        #tf.summary.scalar(name='losses/corr_loss', tensor=self.corr_loss)
+        #tf.summary.scalar(name='acc/t1', tensor=self.metrics_t1)
+        #tf.summary.scalar(name='acc/t2', tensor=self.metrics_t2)
 
         return True

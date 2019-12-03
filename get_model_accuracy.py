@@ -10,8 +10,8 @@ import utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-g', '--gpu', help='gpu device ID', default='0')
-parser.add_argument('-m', '--model_dir', help='model directory', default='./resnet50_all_scale_4_corr_lr_0.01/model/')
-parser.add_argument('-o', '--output', help='output file', default='./results/resnet50_all_scale_4_corr_lr_0.01.mat')
+parser.add_argument('-m', '--model_dir', help='model directory', default='./resnet50_lr_0.01/model/')
+parser.add_argument('-o', '--output', help='output file', default='./results/resnet50_0.01.mat')
 parser.add_argument('-tst', '--tst_dir', help='testing file dir', default='./data_small/tst/')
 parser.add_argument('-val', '--val_dir', help='validation file dir', default='./data_small/val/')
 args = parser.parse_args()

@@ -19,6 +19,7 @@ from CorrFusionNet import model
 
 logging.basicConfig(format='%(asctime)-15s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
 
+## for evaluation in each epoch
 def test(model=None, session=None, file_list=None, batch_size=None, use_tfboard=True, summary=None, tb_writer=None, step=0):
     session.run(model.local_init)
     for pfile in file_list:
@@ -52,20 +53,21 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
     sess = tf.Session(config=config)
 
     global_steps = tf.Variable(0, trainable=False)
-    optimizer = tf.train.MomentumOptimizer(learning_rate=1e-2,momentum=0.9,use_nesterov=True).minimize(base_model.losses, global_step=global_steps)
-    #optimizer = tf.train.AdamOptimizer(learning_rate=1e-3,).minimize(base_model.losses, global_step=global_steps)
+    optimizer = tf.train.MomentumOptimizer(learning_rate=1e-3,momentum=0.9,use_nesterov=True).minimize(base_model.losses, global_step=global_steps)
     '''
-    conv_vars = tf.trainable_variables(scope='conv_layers')
-    dense_vars = tf.trainable_variables()[len(conv_vars):]
-    optimizer_dcca = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(base_model.dcca_loss, var_list=dense_vars, global_step=global_steps)
-
-    optimizer = tf.group(optimizer, optimizer_dcca)
+    specific optimizers for DCCA loss
     '''
-    initializer = tf.global_variables_initializer()
+    # optimizer = tf.train.AdamOptimizer(learning_rate=1e-3,).minimize(base_model.losses, global_step=global_steps)
+    # conv_vars = tf.trainable_variables(scope='conv_layers')
+    # dense_vars = tf.trainable_variables()[len(conv_vars):]
+    # optimizer_dcca = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(base_model.dcca_loss, var_list=dense_vars, global_step=global_steps)
+    # optimizer = tf.group(optimizer, optimizer_dcca)
     
+    initializer = tf.global_variables_initializer()
     sess.run(base_model.local_init)
     sess.run(initializer)
 
+    ## tensorboard logger
     summary_merge = None
     writer_trn = writer_tst = writer_val = None
     if args.use_tfboard is True:
@@ -77,10 +79,10 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
     temp_acc_t1 = 0.
     temp_acc_t2 = 0.
     
+    ## storing the outputs to log.txt
     f = open(args.log_path+'log.txt', 'w')
     cnt = 0
     for step in range(args.epoches):
-        
         ### optimization
         logging.info('Epoch %2d, training started......'%(step))
         for trn in trn_file:
@@ -94,13 +96,6 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
                 feed_dict = {base_model.inputs_t1: xtrn1[lb:ub, :], base_model.labels_t1: ytrn1[lb:ub],
                              base_model.inputs_t2: xtrn2[lb:ub, :], base_model.labels_t2: ytrn2[lb:ub]}
                 sess.run([optimizer], feed_dict=feed_dict)
-                '''
-                if args.use_tfboard:
-                    writer_trn.add_summary(sess.run(summary_merge, feed_dict=feed_dict),global_step=cnt)
-                    cnt = cnt + 1
-                    #writer_trn.flush()
-                '''
-                
         logging.info('Epoch %2d, training finished.....'%(step))
         
         ### training
@@ -150,6 +145,7 @@ if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+    ## load data from npz files
     trn_list = os.listdir(args.trn_dir)
     trn_file = [args.trn_dir+npz for npz in trn_list]
     print(trn_file)
@@ -161,12 +157,9 @@ if __name__ == '__main__':
     tst_list = os.listdir(args.tst_dir)
     tst_file = [args.tst_dir+npz for npz in tst_list]
     print(tst_file)
-    for k in range(5):
-        args.log_path = './resnet50_all_scale_4_corr_lr_0.01/log/'+str(k+5)+'/'
-        args.model_path = './resnet50_all_scale_4_corr_lr_0.01/model/'+str(k+5)+'/'
-        
-        if os.path.exists(args.log_path) is False:
-            os.makedirs(args.log_path)
-        if args.save_model and (os.path.exists(args.model_path) is False):
-            os.makedirs(args.model_path)
-        main(trn_file, val_file, tst_file, args)
+
+    if os.path.exists(args.log_path) is False:
+        os.makedirs(args.log_path)
+    if args.save_model and (os.path.exists(args.model_path) is False):
+        os.makedirs(args.model_path)
+    main(trn_file, val_file, tst_file, args)

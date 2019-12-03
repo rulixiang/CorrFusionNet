@@ -6,7 +6,7 @@ def cca_loss(inputs, rcov1=1e-4, rcov2=1e-4, eps=1e-12):
     '''
     view_t1: nSamples x 2n Bands
     view_t2: nSamples x 2n Bands
-    borrowed from https://bitbucket.org/qingming_tang/deep-canonical-correlation-analysis/
+    from https://bitbucket.org/qingming_tang/deep-canonical-correlation-analysis/
     '''
     eps_eig = eps
     N = tf.shape(input=inputs)[0]
