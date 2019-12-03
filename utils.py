@@ -21,15 +21,13 @@ def LoadNpy(filename=None):
     image_t2 = image_t2.astype(np.float32)/np.max(image_t2)-0.5
     label_t1 = npy['label_t1'] - 1
     label_t2 = npy['label_t2'] - 1
-
-    
     ## shuffle
     #perm_index = np.random.permutation(len(label_t1))
     #label_t1 = label_t1[perm_index]
     #image_t1 = image_t1[perm_index,:]
     
     return image_t1, image_t2, label_t1, label_t2
-    #return np.concatenate((image_t1, image_t2),axis=0), np.concatenate((image_t2, image_t1),axis=0), np.concatenate((label_t1, label_t2),axis=0), np.concatenate((label_t2, label_t1),axis=0)
+
 
 def Accuracy(pred_t1, pred_t2, label_t1, label_t2):
     oa_t1 = metrics.accuracy_score(y_true=label_t1, y_pred=pred_t1)
@@ -38,7 +36,7 @@ def Accuracy(pred_t1, pred_t2, label_t1, label_t2):
     pred_bi = np.equal(pred_t1, pred_t2).astype(np.int16)
     label_bi = np.equal(label_t1, label_t2).astype(np.int16)
     oa_bi = metrics.accuracy_score(y_true=label_bi, y_pred=pred_bi,)
-    #oa_bi = metrics.precision_score(y_true=label_bi,y_pred=pred_bi)
+
     '''
     cnt = 0.
     for k1 in range(len(pred_t1)):
@@ -47,6 +45,5 @@ def Accuracy(pred_t1, pred_t2, label_t1, label_t2):
     oa_tr = cnt/float(len(pred_t1))
     '''
     oa_tr = np.sum((pred_t1==label_t1)&((pred_t2==label_t2)))/float(len(pred_t1))
-    #print('ok')
 
     return oa_t1, oa_t2, oa_bi, oa_tr
