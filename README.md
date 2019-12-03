@@ -33,6 +33,9 @@ F:.
 
 
 ## Results
-
+- The results of quantitative assessments:
+<img src="./figures/results.png">
+- The confusion matrices the bi-temporal classification results by CorrFusionNet:
+<img src="./figures/confusionmat.png">
 ## Contact
 [rulxiaing](mailto:rulxiaing@outlook.com)
