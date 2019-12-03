@@ -7,6 +7,7 @@ We proposed a unified network called CorrFusionNet for scene change detection. T
 ## CorrFusion Module
 - The proposed CorrFusion module:
 <img src="./figures/corrfusion.png">
+
 - The proposed CorrFusionNet:
 <img src="./figures/corrfusionnet.png">
 
@@ -35,6 +36,7 @@ F:.
 ## Results
 - The results of quantitative assessments:
 <img src="./figures/results.png">
+
 - The confusion matrices the bi-temporal classification results by CorrFusionNet:
 <img src="./figures/confusionmat.png">
 ## Contact
