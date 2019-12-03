@@ -27,7 +27,7 @@ tensorflow==2.0.0
 ```
 
 ## Data
-The images are stored in npz format. Each npz file contains ```N``` images with shape of ```H x W x C``` and the corresponding labels.
+The images are stored in npz format.
 ```
 ├─trn
 │      0-5000.npz
