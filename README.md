@@ -26,7 +26,7 @@ scikit_learn==0.21.3
 ```
 
 ## Data
-The images are stored in npz format.  Each npz file ```N x H x W x C```
+The images are stored in npz format. Each npz file contains ```N``` images with shape of ```H x W x C``` and the corresponding labels.
 ```
 ├─trn
 │      0-5000.npz
