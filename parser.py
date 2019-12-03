@@ -13,9 +13,9 @@ def argparser():
     parser.add_argument('-sm', '--save_model', help='save best model', type=bool, default=False)
     parser.add_argument('-log', '--save_log', help='save training log', type=bool, default=False)
 
-    parser.add_argument('-trn', '--trn_dir', help='training file dir', default='./data_small/trn/')
-    parser.add_argument('-tst', '--tst_dir', help='testing file dir', default='./data_small/tst/')
-    parser.add_argument('-val', '--val_dir', help='validation file dir', default='./data_small/val/')
+    parser.add_argument('-trn', '--trn_dir', help='training file dir', default='./data/trn/')
+    parser.add_argument('-tst', '--tst_dir', help='testing file dir', default='./data/tst/')
+    parser.add_argument('-val', '--val_dir', help='validation file dir', default='./data/val/')
 
     parser.add_argument('-lpath', '--log_path', help='log file path', default='./log/')
     parser.add_argument('-mpath', '--model_path', help='model file path', default='./model/')
