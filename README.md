@@ -15,25 +15,54 @@ We proposed a unified network called CorrFusionNet for scene change detection. T
 <img src="./figures/corrfusionnet.png">
 
 ## Requirements
-
+```
+seaborn==0.9.0
+matplotlib==3.1.0
+numpy==1.16.4
+scipy==1.2.1
+h5py==2.9.0
+tensorflow==1.14.0
+scikit_learn==0.21.3
+```
 
 ## Data
-
+The images are stored in npz format.  Each npz file ```N x H x W x C```
 ```
-F:.
 ├─trn
 │      0-5000.npz
-│      10000-11691.npz
+│      10000-15000.npz
+│      15000-16488.npz
 │      5000-10000.npz
 │
 ├─tst
-│      0-3341.npz
+│      0-4712.npz
 │
 └─val
-        0-1670.npz
+       0-2355.npz
 ```
 
 ## Usage
+### Install the requirements
+```
+pip install -r requirements.txt
+```
+
+### Run the training code
+```
+python train_cnn.py [-h] [-g GPU] [-b BATCH_SIZE] [-e EPOCHES]
+                    [-n NUM_CLASSES] [-tb USE_TFBOARD] [-sm SAVE_MODEL]
+                    [-log SAVE_LOG] [-trn TRN_DIR] [-tst TST_DIR]
+                    [-val VAL_DIR] [-lpath LOG_PATH] [-mpath MODEL_PATH]
+                    [-tbpath TB_PATH] [-rpath RESULT_PATH]
+```
+(see [parser.py](./parser.py))
+
+### Evaluate on a trained model:
+- Download a trained model from [Baidu](https://pan.baidu.com/s/1kxqzb4DuK3eVczSl88rDWA).
+```
+wget https://pan.baidu.com/s/1kxqzb4DuK3eVczSl88rDWA
+```
+- Evaluation
 
 
 ## Results
