@@ -132,7 +132,7 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
             temp_acc_t1 = val_acc_t1
             temp_acc_t2 = val_acc_t2
         else:
-            logging.info('Performance is worse than the last epoch, don\'t save model....\n')
+            logging.info('Performance is worse, don\'t save model....\n')
     f.close()
     sess.close()
     return True
