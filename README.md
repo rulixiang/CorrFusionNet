@@ -63,13 +63,27 @@ python train_cnn.py [-h] [-g GPU] [-b BATCH_SIZE] [-e EPOCHES]
 wget https://pan.baidu.com/s/1kxqzb4DuK3eVczSl88rDWA
 ```
 - Evaluation
+```
+python evaluate_model.py [-h] [-g GPU] [-m MODEL_DIR] [-tst TST_DIR]
+                         [-val VAL_DIR]
 
+optional arguments:
+  -h, --help            show this help message and exit
+  -g GPU, --gpu GPU     gpu device ID
+  -m MODEL_DIR, --model_dir MODEL_DIR
+                        model directory
+  -tst TST_DIR, --tst_dir TST_DIR
+                        testing file dir
+  -val VAL_DIR, --val_dir VAL_DIR
+                        validation file dir
+
+```
 
 ## Results
 - The results of quantitative assessments:
 <img src="./figures/results.png">
 
-- The confusion matrices the bi-temporal classification results by CorrFusionNet:
+- The confusion matrices of the bi-temporal classification results by CorrFusionNet:
 <img src="./figures/confusionmat.png">
 
 ## Contact
