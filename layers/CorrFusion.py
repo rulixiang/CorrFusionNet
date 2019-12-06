@@ -61,8 +61,8 @@ class CorrFusion(object):
 
     def forward(self, inputs_t1=None, inputs_t2=None):
         '''
-        view_t1: nSamples x 2n Bands
-        view_t2: nSamples x 2n Bands
+        inputs_t1: nSamples x b Bands
+        inputs_t2: nSamples x b Bands
         from https://bitbucket.org/qingming_tang/deep-canonical-correlation-analysis
         '''
         N = tf.shape(input=inputs_t1)[0]
