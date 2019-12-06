@@ -23,8 +23,8 @@ class CorrFusion(object):
     def canonical_corr(self, view_t1, view_t2):
 
         '''
-        view_t1: nSamples x 2n Bands
-        view_t2: nSamples x 2n Bands
+        view_t1: nSamples x b Bands
+        view_t2: nSamples x b Bands
         from https://bitbucket.org/qingming_tang/deep-canonical-correlation-analysis
         '''
         rcov1 = rcov2 = 1e-4
