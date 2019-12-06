@@ -1,6 +1,6 @@
 # CorrFusionNet: Temporal Correlation based Fusion Network
 Code for CorrFusionNet: Correlation based Fusion Network Towards Detecting Scene Changes of Multi-Temporal High-Resolution Imagery.
-Work in progress.
+Undergoing Review.
 
 ## Introduction
 
