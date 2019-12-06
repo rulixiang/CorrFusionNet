@@ -116,10 +116,7 @@ class model():
         # cnn with DeepCCA
         # self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + 1e-3*self.dcca_loss# + tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
         # cnn with softDCCA
-        self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + self.corr_loss + \
-            self.decov_loss + \
-            tf.reduce_sum(tf.get_collection(
-                tf.GraphKeys.REGULARIZATION_LOSSES))
+        self.losses = self.softmax_loss_t1 + self.softmax_loss_t2 + self.corr_loss + self.decov_loss + tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
 
         self.prediction_t1 = tf.argmax(input=self.pred_prob_t1,
                                        axis=1,
