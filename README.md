@@ -1,6 +1,6 @@
 # CorrFusionNet: Temporal Correlation based Fusion Network
-Code for CorrFusionNet: Correlation based Fusion Network Towards Detecting Scene Changes of Multi-Temporal High-Resolution Imagery.
-Undergoing Review.
+Code for CorrFusionNet: Correlation based Fusion Network Towards Multi-Temporal Scene Classification and Change Detection. 
+**Undergoing Review**.
 
 ## Introduction
 
