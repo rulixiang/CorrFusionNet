@@ -59,7 +59,7 @@ python train_cnn.py [-h] [-g GPU] [-b BATCH_SIZE] [-e EPOCHES]
 (see [parser.py](./parser.py))
 
 ### Evaluate on a trained model:
-- Download a trained model from [here](https://pan.baidu.com/s/1kxqzb4DuK3eVczSl88rDWA).
+- Download a trained model [here](https://pan.baidu.com/s/1kxqzb4DuK3eVczSl88rDWA).
 
 - Evaluation
 ```
