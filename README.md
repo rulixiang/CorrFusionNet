@@ -20,10 +20,9 @@ scipy==1.1.0
 matplotlib==3.0.3
 h5py==2.8.0
 numpy==1.16.3
-tensorflow_gpu==1.11.0
+tensorflow_gpu==1.8.0
 Pillow==6.2.1
 scikit_learn==0.21.3
-tensorflow==2.0.0
 ```
 
 ## Data
