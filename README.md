@@ -9,10 +9,14 @@ We proposed a unified network called CorrFusionNet for scene change detection. T
 
 ## CorrFusion Module
 - The proposed CorrFusion module:
+<div align=center>
 <img src="./figures/corrfusion.png">
+</div>
 
 - The proposed CorrFusionNet:
-<img src="./figures/corrfusionnet.png">
+<div align=center>
+<img src="./figures/corrfusionnet.png" width="50%">
+</div>
 
 ## Requirements
 ```
@@ -26,6 +30,13 @@ scikit_learn==0.21.3
 ```
 
 ## Data
+
+- Overview of our Wuhan dataset
+
+<div align=center>
+<img src="figures/dataset.png" width="50%">
+</div>
+
 The images are stored in npz format.
 ```
 ├─trn
@@ -79,10 +90,12 @@ optional arguments:
 
 ## Results
 - The results of quantitative assessments:
+
 <img src="./figures/results.png">
 
-- The confusion matrices of the bi-temporal classification results by CorrFusionNet:
-<img src="./figures/confusionmat.png">
+- Predictions on our dataset:
+
+<img src="./figures/pred.png" width="50%">
 
 ## Contact
 For any questions, you're welcomed to contact [Lixiang Ru.](mailto:rulxiaing@outlook.com)
