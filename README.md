@@ -98,5 +98,6 @@ optional arguments:
 <div align=center>
 <img src="./figures/pred.png" width="90%">
 </div>
+
 ## Contact
 For any questions, you're welcomed to contact [Lixiang Ru.](mailto:rulxiaing@outlook.com)
