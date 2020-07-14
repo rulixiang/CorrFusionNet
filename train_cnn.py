@@ -52,16 +52,34 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
     config.gpu_options.allow_growth=True
     sess = tf.Session(config=config)
 
+    #global_steps = tf.Variable(0, trainable=False)
+    #optimizer = tf.train.MomentumOptimizer(learning_rate=1e-3,momentum=0.9,use_nesterov=True).minimize(base_model.losses, global_step=global_steps)
+
     global_steps = tf.Variable(0, trainable=False)
-    optimizer = tf.train.MomentumOptimizer(learning_rate=1e-3,momentum=0.9,use_nesterov=True).minimize(base_model.losses, global_step=global_steps)
+    steps_per_epoch = int(11783 / args.batch_size)
+
+    boundaries = [30*steps_per_epoch, 60*steps_per_epoch, 90*steps_per_epoch]
+    values = [5*1e-3, 1e-3, 1e-4, 1e-5]
+    learning_rate = tf.train.piecewise_constant(global_steps, boundaries, values)
+    '''
+    inital_lr = 1e-3
+    decay_rate = 0.95
+    learning_rate = tf.train.exponential_decay(learning_rate=inital_lr, global_step=global_steps, decay_rate=decay_rate, decay_steps=decay_steps, staircase=True)
+    '''
+    #optimizer = tf.train.MomentumOptimizer(learning_rate=1e-3,momentum=0.9,use_nesterov=True).minimize(base_model.losses, global_step=global_steps)
+
+    tf.summary.scalar(name='lr/learning_rate', tensor=learning_rate)
+    tf.summary.scalar(name='lr/global_steps', tensor=global_steps)
+
     '''
     specific optimizers for DCCA loss
     '''
-    # optimizer = tf.train.AdamOptimizer(learning_rate=1e-3,).minimize(base_model.losses, global_step=global_steps)
-    # conv_vars = tf.trainable_variables(scope='conv_layers')
-    # dense_vars = tf.trainable_variables()[len(conv_vars):]
-    # optimizer_dcca = tf.train.AdamOptimizer(learning_rate=1e-5).minimize(base_model.dcca_loss, var_list=dense_vars, global_step=global_steps)
-    # optimizer = tf.group(optimizer, optimizer_dcca)
+    
+    optimizer = tf.train.MomentumOptimizer(learning_rate=1e-3,momentum=0.9).minimize(base_model.losses, global_step=global_steps)
+    conv_vars = tf.trainable_variables(scope='conv_layers')
+    dense_vars = tf.trainable_variables()[len(conv_vars):]
+    optimizer_dcca = tf.train.AdamOptimizer(learning_rate=1e-6).minimize(base_model.dcca_loss, var_list=dense_vars, global_step=global_steps)
+    optimizer = tf.group(optimizer, optimizer_dcca)
     
     initializer = tf.global_variables_initializer()
     sess.run(base_model.local_init)
@@ -101,24 +119,21 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
         ### training
         logging.info('Epoch %2d, evaluating on training set......'%(step))
         f.writelines('Epoch %2d, evaluating on training set......\n'%(step))
-        trn_acc_t1, trn_acc_t2 = test(model=base_model, session=sess, file_list=trn_file, batch_size=args.batch_size,
-                                          use_tfboard=args.use_tfboard, summary=summary_merge, tb_writer=writer_trn, step=step)
+        trn_acc_t1, trn_acc_t2 = test(model=base_model, session=sess, file_list=trn_file, batch_size=args.batch_size, use_tfboard=args.use_tfboard, summary=summary_merge, tb_writer=writer_trn, step=step)
         logging.info('Epoch %2d, evaluating on training set finished, acc_t1 is: %.4f, acc_t2 is %.4f.....'%(step, trn_acc_t1, trn_acc_t2))
         f.writelines('Epoch %2d, evaluating on training set finished, acc_t1 is: %.4f, acc_t2 is %.4f.....\n'%(step, trn_acc_t1, trn_acc_t2))
 
         ### validation
         logging.info('Epoch %2d, evaluating on validation set......'%(step))
         f.writelines('Epoch %2d, evaluating on validation set......\n'%(step))
-        val_acc_t1, val_acc_t2 = test(model=base_model, session=sess, file_list=val_file, batch_size=args.batch_size,
-                                          use_tfboard=args.use_tfboard, summary=summary_merge, tb_writer=writer_val, step=step)
+        val_acc_t1, val_acc_t2 = test(model=base_model, session=sess, file_list=val_file, batch_size=args.batch_size, use_tfboard=args.use_tfboard, summary=summary_merge, tb_writer=writer_val, step=step)
         logging.info('Epoch %2d, evaluating on validation set finished, acc_t1 is: %.4f, acc_t2 is %.4f.....'%(step, val_acc_t1, val_acc_t2))
         f.writelines('Epoch %2d, evaluating on validation set finished, acc_t1 is: %.4f, acc_t2 is %.4f.....\n'%(step, val_acc_t1, val_acc_t2))
 
         ### testing
         logging.info('Epoch %2d, evaluating on testing set......'%(step))
         f.writelines('Epoch %2d, evaluating on testing set......\n'%(step))
-        tst_acc_t1, tst_acc_t2 = test(model=base_model, session=sess, file_list=tst_file, batch_size=args.batch_size,
-                                          use_tfboard=args.use_tfboard, summary=summary_merge, tb_writer=writer_tst, step=step)
+        tst_acc_t1, tst_acc_t2 = test(model=base_model, session=sess, file_list=tst_file, batch_size=args.batch_size, use_tfboard=args.use_tfboard, summary=summary_merge, tb_writer=writer_tst, step=step)
         logging.info('Epoch %2d, evaluating on testing set finished, acc_t1 is: %.4f, acc_t2 is %.4f.....'%(step, tst_acc_t1, tst_acc_t2))
         f.writelines('Epoch %2d, evaluating on testing set finished, acc_t1 is: %.4f, acc_t2 is %.4f.....\n\n'%(step, tst_acc_t1, tst_acc_t2))
 
@@ -133,6 +148,7 @@ def main(trn_file=None, val_file=None, tst_file=None, args=None):
             temp_acc_t2 = val_acc_t2
         else:
             logging.info('Performance is worse, don\'t save model....\n')
+        
     f.close()
     sess.close()
     return True
@@ -158,8 +174,15 @@ if __name__ == '__main__':
     tst_file = [args.tst_dir+npz for npz in tst_list]
     print(tst_file)
 
-    if os.path.exists(args.log_path) is False:
-        os.makedirs(args.log_path)
-    if args.save_model and (os.path.exists(args.model_path) is False):
-        os.makedirs(args.model_path)
-    main(trn_file, val_file, tst_file, args)
+    log_path = args.log_path
+    model_path = args.model_path
+    tb_path = args.tb_path 
+    for k in range(3):
+        args.log_path = log_path + str(k) + '/'
+        args.model_path = model_path + str(k) + '/'
+        args.tb_path = tb_path + str(k) + '/'
+        if os.path.exists(args.log_path) is False:
+            os.makedirs(args.log_path)
+        if args.save_model and (os.path.exists(args.model_path) is False):
+            os.makedirs(args.model_path)
+        main(trn_file, val_file, tst_file, args)
