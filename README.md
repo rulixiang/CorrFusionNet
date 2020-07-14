@@ -34,7 +34,7 @@ scikit_learn==0.21.3
 - Overview of our Wuhan dataset
 
 <div align=center>
-<img src="figures/dataset.png" width="50%">
+<img src="figures/dataset.png" width="80%">
 </div>
 
 The images are stored in npz format.
@@ -90,12 +90,13 @@ optional arguments:
 
 ## Results
 - The results of quantitative assessments:
-
-<img src="./figures/results.png">
+<div align=center>
+<img src="./figures/results.png" width="70%">
+</div>
 
 - Predictions on our dataset:
-
-<img src="./figures/pred.png" width="50%">
-
+<div align=center>
+<img src="./figures/pred.png" width="90%">
+</div>
 ## Contact
 For any questions, you're welcomed to contact [Lixiang Ru.](mailto:rulxiaing@outlook.com)
