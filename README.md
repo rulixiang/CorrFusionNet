@@ -1,6 +1,6 @@
 # Multi-Temporal Scene Classification and Scene Change Detection with Correlation based Fusion
 Code for Multi-Temporal Scene Classification and Scene Change Detection with Correlation based Fusion.
-To acquire dataset, please visit this [URL](http://sigma.whu.edu.cn/newspage.php?q=2021_06_27)(In Chinese), or contact chen.wu@whu.edu.cn.
+To acquire dataset, please contact chen.wu@whu.edu.cn.
 
 ## Introduction
 
